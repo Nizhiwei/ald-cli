@@ -8,7 +8,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": {
-    "ald": "./bin/index.js"
+    "ald": "./index.js"
   },
   "repository": {
     "type": "git",
@@ -25,6 +25,7 @@
     "cpy": "^7.0.1",
     "debug": "^4.1.0",
     "download-git-repo": "^1.0.2",
+    "fs-extra": "^7.0.1",
     "glob": "^7.1.2",
     "inquirer": "^6.0.0",
     "node-fs-extra": "^0.8.2",

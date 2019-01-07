@@ -1,12 +1,12 @@
 const inquirer = require('inquirer'),
 chalk = require('chalk'),
-debug = require('debug'),
-exec = require('child_process').exec;
-
+fs=require('fs'),
+fse=require('fs-extra'),
+path=require('path');
 
 module.exports =async (option)=>{
     if(!option){  //如果没输过目录,就弹提示让他输入
-        const defaultName=new Date().getTime();
+        const defaultName='n'+new Date().getTime();
         await inquirer.prompt([ { 
                 type: 'Input', 
                 name:'folder',
@@ -14,17 +14,20 @@ module.exports =async (option)=>{
                 default: defaultName 
             }]).then((answers) => { option=answers.folder})
     }
-    let cmdStr = `git clone ${gitUrl} ${projectName} && cd ${projectName} && git checkout ${branch}`
-    console.log(chalk.white('\n Start ...'))
-    exec(cmdStr, (error, stdout, stderr) => {
-        if (error) {
-            debug(error)('')
+    const folder=path.join(process.cwd(),'src/projects/'+option)
+    fs.stat(folder, (err, stats) => {
+        if(err){//没有目录
+            fse.copy('./template', folder, (err)=> {
+                if(err){
+                    console.log(chalk.red(err))
+                }else{
+                    console.log(chalk.green('\n 项目创建成功'))
+                }
+                process.exit()
+            }) 
+        }else{
+            console.log(chalk.red('\n 项目已存在'))
             process.exit()
         }
-        stdout.on('data', (data) => {
-            debug(data.toString())('')
-        })
-        console.log(chalk.green('\n 项目创建完毕'))
-        process.exit()
-      })
+    })
 }
